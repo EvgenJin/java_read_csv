@@ -12,42 +12,62 @@ package evg.csv;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 public class CSVReader {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String csvFile = "C:\\temp\\IKAR-16902.csv";
         String line = "";
         String cvsSplitBy = ";";
+        Integer rownum = 1;
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             String str = "create table table_name";
             // string for create table by csv file 
             // at 1 line - column name
             // at 2 line - column type            
             StringBuilder str_create_table = new StringBuilder("(");
+            StringBuilder str_values_table = new StringBuilder("(");
             // column name
             String[] header = br.readLine().split(cvsSplitBy);
             // column type           
             String[] header_types = br.readLine().split(cvsSplitBy);
             // count columns        
             Integer num_cols = header.length;
-            for (int i = 0; i < num_cols; i++) {         
-                str_create_table.append(header[i].replaceAll("\"","") + " " + header_types[i].replaceAll("\"",""));                
+            str_create_table.append("id Integer ,");
+            str_values_table.append("id,");
+            for (int i = 0; i < num_cols; i++) {
+                str_create_table.append(header[i].replaceAll("\"","") + " " + header_types[i].replaceAll("\"",""));
+                str_values_table.append(header[i].replaceAll("\"",""));                
                 if (i < num_cols-1) {
                     str_create_table.append(",");
+                    str_values_table.append(",");
                 };
                 if (i == num_cols-1) {
                     str_create_table.append(")");
+                    str_values_table.append(")");
                 }
             }
             String final_sql_create_table = str + str_create_table + ";";
             System.err.println(final_sql_create_table);
+            // create table
+            try {
+                Statement stmt = ConnectBean.getInstance().getConnection().createStatement();
+                stmt.executeUpdate(final_sql_create_table);                
+            }
+            catch(Exception e) {
+                System.err.println(e);
+            }
             // cycle for lines in CSV file
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {                
                 String[] rows = line.split(cvsSplitBy);
                 StringBuilder str_insert_table = new StringBuilder("(");
+                str_insert_table.append(rownum++);
+                str_insert_table.append(",");
+//                rownum = ++rownum;
                 // cylce for cols in rows 
-                for (int i = 0;i < num_cols;i++) {
+                for (int i = 0;i < num_cols;i++) {                
                   if (i > 0 && i <= num_cols -1) {
                       str_insert_table.append(",");
                   }
@@ -73,8 +93,15 @@ public class CSVReader {
                   }               
                 }                
                 str_insert_table.append(");");
-                String final_insert = "insert into table_name " + str_create_table + "values" + str_insert_table;
+                String final_insert = "insert into table_name " + str_values_table + "values" + str_insert_table;
                 System.err.println(final_insert);
+                try {
+                    Statement stmt = ConnectBean.getInstance().getConnection().createStatement();
+                    stmt.executeUpdate(final_insert);                
+                }
+                catch(Exception e) {
+                    System.err.println(e);
+                }                
             }
         } catch (IOException e) {
             e.printStackTrace();
