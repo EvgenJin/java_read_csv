@@ -1,24 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package evg.csv;
 
-import java.io.File;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileSystemView;
-
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
- 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
+ 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -28,25 +17,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
  
 public class main extends JFrame {
-//    JTextField table_name_label;
     String full_path;
     
     public main() {
-        super("Тестовое окно");
+        super("CSV to Database import");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel();
-        
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));               
         final JLabel label_table = new JLabel("Table name");
-        final JTextField table_name_label = new JTextField(15);
-        
-        JButton button_start = new JButton("START");
-               
+        final JTextField table_name_label = new JTextField(15);        
+        JButton button_start = new JButton("START");               
         final JLabel label = new JLabel("Selected CSV");
-        label.setAlignmentX(CENTER_ALIGNMENT);
  
         JButton button = new JButton("Select CSV");
-        button.setAlignmentX(CENTER_ALIGNMENT);
- 
+            
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileopen = new JFileChooser();             
@@ -77,10 +61,7 @@ public class main extends JFrame {
         panel.add(label);        
         panel.add(button);
         panel.add(button_start);
-//        panel.add(Box.createVerticalGlue());
         getContentPane().add(panel);
- 
-        setPreferredSize(new Dimension(260, 220));
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
