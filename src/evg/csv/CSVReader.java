@@ -23,11 +23,10 @@ import java.sql.Statement;
 public class CSVReader {
 
     @SuppressWarnings("empty-statement")
-    public static void main(String[] args) throws Exception {
-        String csvFile = "C:\\temp\\IKAR-16902.csv";
+    public static void generate_sql(String table_name, String csvFile) throws Exception {
+//        String csvFile = "C:\\temp\\IKAR-16902.csv";        
         String csv_line = "";
         String cvsSplitBy = ";";
-        String table_name = "table_name";
         String str_for_create_table = "create table " + table_name;
         StringBuilder str_create_table = new StringBuilder("(");
         StringBuilder str_values_table = new StringBuilder("(");
@@ -105,7 +104,7 @@ public class CSVReader {
                   }               
                 }
                 str_insert_table.append(");");
-                String final_insert = "insert into table_name " + str_values_table + "values" + str_insert_table;
+                String final_insert = "insert into "+ table_name + " " + str_values_table + "values" + str_insert_table;
                 System.err.println(final_insert);
                 // execute insert into statement          
                 try {
