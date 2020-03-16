@@ -13,6 +13,7 @@ public class ConnectBean {
             Class.forName(driver).newInstance();
             String url = "jdbc:sqlite:C:\\Projects\\JAVA\\jsp_app\\database.sqlite3";
             con = DriverManager.getConnection(url);
+            con.setAutoCommit(false);
         } 
         catch (ClassNotFoundException e) {
             throw new Exception(e);
